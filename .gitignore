@@ -1,0 +1,6 @@
+coverageSerial
+coverageParallel
+*.o
+vgcore.*
+*.log
+*.zip

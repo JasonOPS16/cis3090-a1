@@ -1,0 +1,10 @@
+services:
+  cis3090:
+    tty: true
+    user: socs
+    hostname: cis3090
+    image: socsguelph/cis3090:latest
+    ports: 
+      - "22"
+    volumes:
+      - ./:/home/socs/workdir
