@@ -46,20 +46,20 @@ static int loadField(const char *path, Field *f) {
 
     FILE *fp = fopen(path, "r");
     if (!fp) {
-        fprintf(stderr, "Error: cannot open input file '%s'\n", path);
+        fprintf(stderr, "error cant open input file '%s'\n", path);
         return -1;
     }
 
     // read width, height
     if (fscanf(fp, "%lf %lf", &f->width, &f->height) != 2 || f->width <= 0 || f->height <= 0) {
-        fprintf(stderr, "Error: malformed field dimensions in '%s'\n", path);
+        fprintf(stderr, "error bad field size in '%s'\n", path);
         fclose(fp);
         return -1;
     }
 
     // read k
     if (fscanf(fp, "%ld", &f->k) != 1 || f->k < 0) {
-        fprintf(stderr, "Error: malformed node count in '%s'\n", path);
+        fprintf(stderr, "error bade node count in '%s'\n", path);
         fclose(fp);
         return -1;
     }
@@ -70,7 +70,7 @@ static int loadField(const char *path, Field *f) {
         f->y = malloc((size_t)f->k * sizeof(double));
         f->r2 = malloc((size_t)f->k * sizeof(double));
         if (!f->x || !f->y || !f->r2) {
-            fprintf(stderr, "Error: out of memory\n");
+            fprintf(stderr, "error out of mem\n");
             freeField(f);
             fclose(fp);
             return -1;
@@ -81,7 +81,7 @@ static int loadField(const char *path, Field *f) {
     for (long i = 0; i < f->k; i++) {
         double r;
         if (fscanf(fp, "%lf %lf %lf", &f->x[i], &f->y[i], &r) != 3 || r < 0) {
-            fprintf(stderr, "Error: malformed node line %ld in '%s'\n", i, path);
+            fprintf(stderr, "error bad node line %ld in '%s'\n", i, path);
             freeField(f);
             fclose(fp);
             return -1;
@@ -121,18 +121,19 @@ int main(int argc, char *argv[]) {
 
     unsigned long long nParsed, seedParsed;
     if (parseUnsigned(argv[2], 1000000000000000000ULL, &nParsed) != 0 || nParsed == 0) {
-        fprintf(stderr, "Error: N must be a positive integer (max 10^18)\n");
+        fprintf(stderr, "error n must be a pos int <= max 10^18\n");
         return 1;
     }
     
     // check if fits in unsigned int range
     if (parseUnsigned(argv[3], (unsigned int)-1, &seedParsed) != 0) {
-        fprintf(stderr, "Error: baseSeed must be a non-negative integer that fits in unsigned int\n");
+        fprintf(stderr, "error baseSeed has to be non neg int that fits a unsigned int\n");
         return 1;
     }
     long long n = (long long)nParsed;
     unsigned int seed = (unsigned int)seedParsed;
 
+    // load field from file
     Field field;
     if (loadField(argv[1], &field) != 0) return 1;
 
