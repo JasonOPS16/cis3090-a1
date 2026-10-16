@@ -14,15 +14,15 @@ typedef struct {
 
 // parse for unsigned long long, rejecting anything above max, 0 for success -1 for error
 static int parseUnsigned(const char *s, unsigned long long max, unsigned long long *out) {
-    if (*s == '\0') {
+    if (s[0] == '\0') {
         return -1; // empty string
     }
     unsigned long long v = 0;
-    for (; *s != '\0'; s++) {
-        if (*s < '0' || *s > '9') {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] < '0' || s[i] > '9') {
             return -1; // not a digit
         }
-        unsigned long long d = (unsigned long long)(*s - '0');
+        unsigned long long d = (unsigned long long)(s[i] - '0');
         if (v > (max - d) / 10) {
             return -1; // exceeds max
         }
@@ -103,7 +103,9 @@ static inline int isCovered(const Field *f, double px, double py) {
     for (long i = 0; i < f->k; i++) {
         double dx = px - f->x[i];
         double dy = py - f->y[i];
-        if (dx * dx + dy * dy < f->r2[i]) return 1; /* stop at first hit */
+        if (dx * dx + dy * dy < f->r2[i]) {
+            return 1; // stop at first hit
+        }
     }
     return 0;
 }
@@ -135,7 +137,9 @@ int main(int argc, char *argv[]) {
 
     // load field from file
     Field field;
-    if (loadField(argv[1], &field) != 0) return 1;
+    if (loadField(argv[1], &field) != 0) {
+        return 1;
+    }
 
     // timed area
     struct timespec start, end;
