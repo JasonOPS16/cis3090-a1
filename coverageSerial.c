@@ -1,4 +1,4 @@
-#define _POSIX_C_SOURCE 200809L // to fix the implicit declaration warning
+#define _POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
 #include <stdlib.h>
